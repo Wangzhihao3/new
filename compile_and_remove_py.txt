@@ -35,3 +35,4 @@ if __name__ == '__main__':
     move_pyc_files(root)
     delete_py_files(root)
     print("✅ 完成！已生成 .pyc 并删除 .py 文件。")
+1

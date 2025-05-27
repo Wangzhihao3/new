@@ -1,0 +1,37 @@
+import compileall
+import os
+import shutil
+
+def compile_project(root_dir):
+    print(f"📦 编译 {root_dir} 中的所有 .py 文件为 .pyc ...")
+    compileall.compile_dir(root_dir, force=True, quiet=True)
+
+def move_pyc_files(root_dir):
+    print("📂 将 __pycache__ 中的 .pyc 移动到源目录 ...")
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for dirname in dirnames:
+            if dirname == '__pycache__':
+                cache_dir = os.path.join(dirpath, dirname)
+                for filename in os.listdir(cache_dir):
+                    if filename.endswith('.pyc'):
+                        # 原始文件名：module.cpython-39.pyc -> module.pyc
+                        original_name = filename.split('.')[0] + '.pyc'
+                        src = os.path.join(cache_dir, filename)
+                        dst = os.path.join(dirpath, original_name)
+                        shutil.copy2(src, dst)
+                shutil.rmtree(cache_dir)
+
+def delete_py_files(root_dir):
+    print("🧹 删除所有 .py 文件（保留 __init__.py） ...")
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if filename.endswith('.py') and filename != '__init__.py':
+                file_path = os.path.join(dirpath, filename)
+                os.remove(file_path)
+
+if __name__ == '__main__':
+    root = os.path.dirname(os.path.abspath(__file__))
+    compile_project(root)
+    move_pyc_files(root)
+    delete_py_files(root)
+    print("✅ 完成！已生成 .pyc 并删除 .py 文件。")

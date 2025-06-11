@@ -36,3 +36,5 @@ if __name__ == '__main__':
     delete_py_files(root)
     print("✅ 完成！已生成 .pyc 并删除 .py 文件。")
 1
+
+测试提交
